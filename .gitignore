@@ -173,3 +173,4 @@ cython_debug/
 # Ignore secret files
 *.secret  
 Files/*
+*.db
