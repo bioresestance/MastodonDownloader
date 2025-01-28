@@ -68,6 +68,8 @@ def main():
                     print(f"Error downloading {filename}: {e}")
                     continue
     
+        if max_downloads > 0 and current_downloads >= max_downloads:
+            break
         posts = mastodon.fetch_next(posts)
         if not posts or posts == None:
             break
