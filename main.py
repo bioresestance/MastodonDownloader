@@ -35,9 +35,17 @@ def main():
     user = mastodon.account_lookup(settings.mastodon_user)
     posts = mastodon.account_statuses(user['id'])
 
+    max_downloads = settings.download_limit
+
+    current_downloads = 0
+
     while True:
         for post in posts:
             for media in post['reblog']['media_attachments']:
+
+                if max_downloads > 0 and current_downloads >= max_downloads:
+                    print(f"Download limit reached, stopping...")
+                    break
                 try:
                     url = media['url']
                     filename = url.split("/")[-1]
@@ -55,6 +63,7 @@ def main():
 
                     download_file(url, "./Files/" + filename)
                     print(f"Downloaded {filename}")
+                    current_downloads += 1
                 except Exception as e:
                     print(f"Error downloading {filename}: {e}")
                     continue
