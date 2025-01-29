@@ -1,13 +1,17 @@
 from mastodon import Mastodon
 from settings import get_settings
-from peewee import Model, CharField, IntegerField, SqliteDatabase
+from peewee import Model, CharField, SqliteDatabase, MySQLDatabase
 import requests
 import os
 
 
 settings = get_settings()
-db = SqliteDatabase('database.db')
 
+if settings.sql_url:
+    db = MySQLDatabase( settings.sql_db, user=settings.sql_user, password=settings.sql_password,
+                       host=settings.sql_url, port=3306)
+else:
+    db = SqliteDatabase('database.db')
 
 class Media(Model):
     mastodon_id = CharField(primary_key=True, unique=True)
